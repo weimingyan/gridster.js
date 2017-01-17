@@ -869,22 +869,24 @@
 
 		this.update_widget_dimensions($widget, new_wgd);
 
-		if (empty_cols.length) {
-			var cols_to_remove_holes = [
-				empty_cols[0], new_wgd.row,
-				empty_cols[empty_cols.length - 1] - empty_cols[0] + 1,
-				Math.min(old_size_y, new_wgd.size_y),
-				$widget
-			];
+    if (this.options.shift_widgets_up) {
+			if (empty_cols.length) {
+				var cols_to_remove_holes = [
+					empty_cols[0], new_wgd.row,
+					empty_cols[empty_cols.length - 1] - empty_cols[0] + 1,
+					Math.min(old_size_y, new_wgd.size_y),
+					$widget
+				];
 
-			this.remove_empty_cells.apply(this, cols_to_remove_holes);
-		}
+				this.remove_empty_cells.apply(this, cols_to_remove_holes);
+			}
 
-		if (empty_rows.length) {
-			var rows_to_remove_holes = [
-				new_wgd.col, new_wgd.row, new_wgd.size_x, new_wgd.size_y, $widget
-			];
-			this.remove_empty_cells.apply(this, rows_to_remove_holes);
+			if (empty_rows.length) {
+				var rows_to_remove_holes = [
+					new_wgd.col, new_wgd.row, new_wgd.size_x, new_wgd.size_y, $widget
+				];
+				this.remove_empty_cells.apply(this, rows_to_remove_holes);
+			}
 		}
 
 		this.move_widget_up($widget);
