@@ -1539,30 +1539,23 @@
 		this.$changed = this.$changed.add(this.$player);
 
 	    //If widget has new position, clean previous grid
-		if (this.placeholder_grid_data.el.coords().grid.col !== this.placeholder_grid_data.col ||
-            this.placeholder_grid_data.el.coords().grid.row !== this.placeholder_grid_data.row) {
-		    this.update_widget_position(this.placeholder_grid_data.el.coords().grid, false);
+        var grid = this.placeholder_grid_data.el.coords().grid;
+        if (grid.col !== this.placeholder_grid_data.col || grid.row !== this.placeholder_grid_data.row) {
+            this.update_widget_position(grid, false);
 
-			var grid = this.placeholder_grid_data.el.coords().grid;
-
-			// update cells previously occupied by dragging cell if only it is still occupied by dragging cell
-			if (this.is_widget(grid.col, grid.row) && this.is_player(grid.col, grid.row)) {
-			    this.update_widget_position(this.placeholder_grid_data.el.coords().grid, false);
-
-				// move the cells down if there is an overlap and we are in static mode
-				if (this.options.collision.wait_for_mouseup) {
-					this.for_each_cell_occupied(this.placeholder_grid_data, function (tcol, trow) {
-						if (this.is_widget(tcol, trow)) {
-							// get number of cells to move
-							var destinyRow = this.placeholder_grid_data.row + this.placeholder_grid_data.size_y;
-							var currentOverlappedRow = parseInt(this.gridmap[tcol][trow][0].getAttribute('data-row'));
-							var cellsToMove = destinyRow - currentOverlappedRow;
-							this.move_widget_down(this.is_widget(tcol, trow), cellsToMove);
-						}
-					});
-				}
-			}
-		}
+            // move the cells down if there is an overlap and we are in static mode
+            if (this.options.collision.wait_for_mouseup) {
+                this.for_each_cell_occupied(this.placeholder_grid_data, function (tcol, trow) {
+                    if (this.is_widget(tcol, trow)) {
+                        // get number of cells to move
+                        var destinyRow = this.placeholder_grid_data.row + this.placeholder_grid_data.size_y;
+                        var currentOverlappedRow = parseInt(this.gridmap[tcol][trow][0].getAttribute('data-row'));
+                        var cellsToMove = destinyRow - currentOverlappedRow;
+                        this.move_widget_down(this.is_widget(tcol, trow), cellsToMove);
+                    }
+                });
+            }
+        }
 
 		this.cells_occupied_by_player = this.get_cells_occupied(this.placeholder_grid_data);
 
