@@ -1413,10 +1413,12 @@
 		this.player_grid_data = this.$player.coords().grid;
 		this.placeholder_grid_data = $.extend({}, this.player_grid_data);
 
-		this.set_dom_grid_height(this.$el.height() +
-		(this.player_grid_data.size_y * this.min_widget_height));
-
-		this.set_dom_grid_width(this.cols);
+		var highestRow = this.get_highest_occupied_cell().row;
+	    if ((highestRow + this.player_grid_data.size_y) <= this.options.max_rows)
+	    {
+	        this.set_dom_grid_height(this.$el.height() + (this.player_grid_data.size_y * this.min_widget_height));
+	    }
+	    this.set_dom_grid_width(this.cols);
 
 		var pgd_sizex = this.player_grid_data.size_x;
 		var cols_diff = this.cols - this.highest_col;
