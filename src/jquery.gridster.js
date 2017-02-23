@@ -1556,9 +1556,14 @@
                     if (this.is_widget(tcol, trow)) {
                         // get number of cells to move
                         var destinyRow = this.placeholder_grid_data.row + this.placeholder_grid_data.size_y;
-                        var currentOverlappedRow = parseInt(this.gridmap[tcol][trow][0].getAttribute('data-row'));
-                        var cellsToMove = destinyRow - currentOverlappedRow;
-                        this.move_widget_down(this.is_widget(tcol, trow), cellsToMove);
+                        if (destinyRow > this.options.max_rows) {
+							this.set_placeholder(this.placeholder_grid_data.el.coords().grid.col, this.placeholder_grid_data.el.coords().grid.row)
+						}
+						else {
+							var currentOverlappedRow = parseInt(this.gridmap[tcol][trow][0].getAttribute('data-row'));
+							var cellsToMove = destinyRow - currentOverlappedRow;
+							this.move_widget_down(this.is_widget(tcol, trow), cellsToMove);
+						}
                     }
                 });
             }
