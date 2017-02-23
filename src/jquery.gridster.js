@@ -31,6 +31,10 @@
 				extra_cols: 0,
 				min_cols: 1,
 				max_cols: Infinity,
+				limit: {
+				    width: true,
+				    height: false
+				},
 				min_rows: 1,
 				max_rows: 15,
 				autogenerate_stylesheet: true,
@@ -1310,7 +1314,8 @@
 			offset_left: this.options.widget_margins[0],
 			offset_top: this.options.widget_margins[1],
 			container_width: (this.cols * this.min_widget_width) + ((this.cols + 1) * this.options.widget_margins[0]),
-			limit: true,
+			container_height: (this.rows * this.min_widget_height) + ((this.rows + 1) * this.options.widget_margins[0]),
+			limit: { width: this.options.limit.width, height: this.options.limit.height },
 			start: function (event, ui) {
 				self.$widgets.filter('.player-revert')
 						.removeClass('player-revert');
@@ -1351,7 +1356,7 @@
 			container_width: this.container_width,
 			move_element: false,
 			resize: true,
-			limit: this.options.max_cols !== Infinity,
+			limit: { width: this.options.max_cols !== Infinity || this.limit.width, height: this.options.max_rows !== Infinity || this.limit.width },
 			scroll_container: this.options.scroll_container,
 			start: $.proxy(this.on_start_resize, this),
 			stop: $.proxy(function (event, ui) {
