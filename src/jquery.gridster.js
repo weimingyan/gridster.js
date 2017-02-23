@@ -1556,14 +1556,13 @@
                     if (this.is_widget(tcol, trow)) {
                         // get number of cells to move
                         var destinyRow = this.placeholder_grid_data.row + this.placeholder_grid_data.size_y;
-                        if (destinyRow > this.options.max_rows) {
-							this.set_placeholder(this.placeholder_grid_data.el.coords().grid.col, this.placeholder_grid_data.el.coords().grid.row);
-						}
-						else {
-							var currentOverlappedRow = parseInt(this.gridmap[tcol][trow][0].getAttribute('data-row'));
-							var cellsToMove = destinyRow - currentOverlappedRow;
-							this.move_widget_down(this.is_widget(tcol, trow), cellsToMove);
-						}
+
+		                var currentOverlappedRow = parseInt(this.gridmap[tcol][trow][0].getAttribute('data-row'));
+		                var cellsToMove = destinyRow - currentOverlappedRow;
+		                var failed = !this.move_widget_down(this.is_widget(tcol, trow), cellsToMove);
+		                if (failed) {
+		                    this.set_placeholder(this.placeholder_grid_data.el.coords().grid.col, this.placeholder_grid_data.el.coords().grid.row)
+		                }
                     }
                 });
             }
@@ -3046,6 +3045,10 @@
 
 		el_grid_data = $widget.coords().grid;
 		actual_row = el_grid_data.row;
+		if (actual_row + y_units > this.options.max_rows)
+		{
+		    return false;
+		}
 		moved = [];
 		y_diff = y_units;
 
@@ -3053,24 +3056,32 @@
 			return false;
 		}
 
+		this.failed = false;
 		if ($.inArray($widget, moved) === -1) {
 
 			var widget_grid_data = $widget.coords().grid;
 			var next_row = actual_row + y_units;
 			var $next_widgets = this.widgets_below($widget);
 
-			this.remove_from_gridmap(widget_grid_data);
+			//this.remove_from_gridmap(widget_grid_data);
 
-			$next_widgets.each($.proxy(function (i, widget) {
-				var $w = $(widget);
-				var wd = $w.coords().grid;
-				var tmp_y = this.displacement_diff(
-						wd, widget_grid_data, y_diff);
+            $next_widgets.each($.proxy(function (i, widget) {
+                if (this.failed !== true) {
+                    var $w = $(widget);
+                    var wd = $w.coords().grid;
+                    var tmp_y = this.displacement_diff(
+                            wd, widget_grid_data, y_diff);
 
-				if (tmp_y > 0) {
-					this.move_widget_down($w, tmp_y);
-				}
+                    if (tmp_y > 0) {
+                        this.failed = this.move_widget_down($w, tmp_y) === false;
+                    }
+                }
 			}, this));
+            if (this.failed)
+            {
+                return false;
+            }
+			this.remove_from_gridmap(widget_grid_data);
 
 			widget_grid_data.row = next_row;
 			this.update_widget_position(widget_grid_data, $widget);
@@ -3079,6 +3090,7 @@
 
 			moved.push($widget);
 		}
+		return true;
 	};
 
 
