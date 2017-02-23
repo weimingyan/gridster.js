@@ -86,7 +86,7 @@
             $(window) : this.$container.closest(this.options.scroll_container);
         this.is_dragging = false;
         this.player_min_left = 0 + this.options.offset_left;
-		this.player_min_top = 0 + this.options.offset_top
+		this.player_min_top = 0 + this.options.offset_top;
         this.id = uniqId();
         this.ns = '.gridster-draggable-' + this.id;
         this.init();
