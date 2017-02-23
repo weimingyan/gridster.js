@@ -1561,7 +1561,7 @@
 		                var cellsToMove = destinyRow - currentOverlappedRow;
 		                var failed = !this.move_widget_down(this.is_widget(tcol, trow), cellsToMove);
 		                if (failed) {
-		                    this.set_placeholder(this.placeholder_grid_data.el.coords().grid.col, this.placeholder_grid_data.el.coords().grid.row)
+		                    this.set_placeholder(this.placeholder_grid_data.el.coords().grid.col, this.placeholder_grid_data.el.coords().grid.row);
 		                }
                     }
                 });
