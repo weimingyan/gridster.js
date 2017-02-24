@@ -3045,7 +3045,7 @@
 
 		el_grid_data = $widget.coords().grid;
 		actual_row = el_grid_data.row;
-		if (actual_row + y_units > this.options.max_rows)
+		if (actual_row + ($widget.coords().grid.size_y - 1) + y_units > this.options.max_rows)
 		{
 		    return false;
 		}
