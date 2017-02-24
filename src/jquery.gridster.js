@@ -417,6 +417,10 @@
 
 		if (!col && !row) {
 			pos = this.next_position(size_x, size_y);
+			if(pos === false)
+		    {
+		        return false;
+		    }
 		} else {
 			pos = {
 				col: col,
