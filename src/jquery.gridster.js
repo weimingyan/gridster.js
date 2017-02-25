@@ -31,6 +31,10 @@
 				extra_cols: 0,
 				min_cols: 1,
 				max_cols: Infinity,
+				limit: {
+				    width: true,
+				    height: false
+				},
 				min_rows: 1,
 				max_rows: 15,
 				autogenerate_stylesheet: true,
@@ -413,6 +417,10 @@
 
 		if (!col && !row) {
 			pos = this.next_position(size_x, size_y);
+			if(pos === false)
+		    {
+		        return false;
+		    }
 		} else {
 			pos = {
 				col: col,
@@ -1310,7 +1318,8 @@
 			offset_left: this.options.widget_margins[0],
 			offset_top: this.options.widget_margins[1],
 			container_width: (this.cols * this.min_widget_width) + ((this.cols + 1) * this.options.widget_margins[0]),
-			limit: true,
+			container_height: (this.rows * this.min_widget_height) + ((this.rows + 1) * this.options.widget_margins[0]),
+			limit: { width: this.options.limit.width, height: this.options.limit.height },
 			start: function (event, ui) {
 				self.$widgets.filter('.player-revert')
 						.removeClass('player-revert');
@@ -1351,7 +1360,7 @@
 			container_width: this.container_width,
 			move_element: false,
 			resize: true,
-			limit: this.options.max_cols !== Infinity,
+			limit: { width: this.options.max_cols !== Infinity || this.limit.width, height: this.options.max_rows !== Infinity || this.limit.width },
 			scroll_container: this.options.scroll_container,
 			start: $.proxy(this.on_start_resize, this),
 			stop: $.proxy(function (event, ui) {
@@ -1408,10 +1417,12 @@
 		this.player_grid_data = this.$player.coords().grid;
 		this.placeholder_grid_data = $.extend({}, this.player_grid_data);
 
-		this.set_dom_grid_height(this.$el.height() +
-		(this.player_grid_data.size_y * this.min_widget_height));
-
-		this.set_dom_grid_width(this.cols);
+		var highestRow = this.get_highest_occupied_cell().row;
+	    if ((highestRow + this.player_grid_data.size_y) <= this.options.max_rows)
+	    {
+	        this.set_dom_grid_height(this.$el.height() + (this.player_grid_data.size_y * this.min_widget_height));
+	    }
+	    this.set_dom_grid_width(this.cols);
 
 		var pgd_sizex = this.player_grid_data.size_x;
 		var cols_diff = this.cols - this.highest_col;
@@ -1549,9 +1560,13 @@
                     if (this.is_widget(tcol, trow)) {
                         // get number of cells to move
                         var destinyRow = this.placeholder_grid_data.row + this.placeholder_grid_data.size_y;
-                        var currentOverlappedRow = parseInt(this.gridmap[tcol][trow][0].getAttribute('data-row'));
-                        var cellsToMove = destinyRow - currentOverlappedRow;
-                        this.move_widget_down(this.is_widget(tcol, trow), cellsToMove);
+
+		                var currentOverlappedRow = parseInt(this.gridmap[tcol][trow][0].getAttribute('data-row'));
+		                var cellsToMove = destinyRow - currentOverlappedRow;
+		                var failed = !this.move_widget_down(this.is_widget(tcol, trow), cellsToMove);
+		                if (failed) {
+		                    this.set_placeholder(this.placeholder_grid_data.el.coords().grid.col, this.placeholder_grid_data.el.coords().grid.row);
+		                }
                     }
                 });
             }
@@ -3034,6 +3049,10 @@
 
 		el_grid_data = $widget.coords().grid;
 		actual_row = el_grid_data.row;
+		if (actual_row + ($widget.coords().grid.size_y - 1) + y_units > this.options.max_rows)
+		{
+		    return false;
+		}
 		moved = [];
 		y_diff = y_units;
 
@@ -3041,24 +3060,32 @@
 			return false;
 		}
 
+		this.failed = false;
 		if ($.inArray($widget, moved) === -1) {
 
 			var widget_grid_data = $widget.coords().grid;
 			var next_row = actual_row + y_units;
 			var $next_widgets = this.widgets_below($widget);
 
-			this.remove_from_gridmap(widget_grid_data);
+			//this.remove_from_gridmap(widget_grid_data);
 
-			$next_widgets.each($.proxy(function (i, widget) {
-				var $w = $(widget);
-				var wd = $w.coords().grid;
-				var tmp_y = this.displacement_diff(
-						wd, widget_grid_data, y_diff);
+            $next_widgets.each($.proxy(function (i, widget) {
+                if (this.failed !== true) {
+                    var $w = $(widget);
+                    var wd = $w.coords().grid;
+                    var tmp_y = this.displacement_diff(
+                            wd, widget_grid_data, y_diff);
 
-				if (tmp_y > 0) {
-					this.move_widget_down($w, tmp_y);
-				}
+                    if (tmp_y > 0) {
+                        this.failed = this.move_widget_down($w, tmp_y) === false;
+                    }
+                }
 			}, this));
+            if (this.failed)
+            {
+                return false;
+            }
+			this.remove_from_gridmap(widget_grid_data);
 
 			widget_grid_data.row = next_row;
 			this.update_widget_position(widget_grid_data, $widget);
@@ -3067,6 +3094,7 @@
 
 			moved.push($widget);
 		}
+		return true;
 	};
 
 

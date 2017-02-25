@@ -22,7 +22,7 @@
     var defaults = {
         items: 'li',
         distance: 1,
-        limit: true,
+        limit: {width: true, height: false},
         offset_left: 0,
         autoscroll: true,
         ignore_dragging: ['INPUT', 'TEXTAREA', 'SELECT', 'BUTTON'], // or function
@@ -86,6 +86,7 @@
             $(window) : this.$container.closest(this.options.scroll_container);
         this.is_dragging = false;
         this.player_min_left = 0 + this.options.offset_left;
+		this.player_min_top = 0 + this.options.offset_top;
         this.id = uniqId();
         this.ns = '.gridster-draggable-' + this.id;
         this.init();
@@ -167,11 +168,18 @@
                              this.$scroll_container.scrollTop() -
                              this.scroll_container_offset_y);
 
-        if (this.options.limit) {
+        if (this.options.limit.width) {
             if (left > this.player_max_left) {
                 left = this.player_max_left;
             } else if(left < this.player_min_left) {
                 left = this.player_min_left;
+            }
+		}
+		if (this.options.limit.height) {
+			if (top > this.player_max_top) {
+                top = this.player_max_top;
+            } else if (top < this.player_min_top) {
+                top = this.player_min_top;
             }
         }
 
@@ -204,7 +212,9 @@
     fn.set_limits = function(container_width) {
         container_width || (container_width = this.$container.width());
         this.player_max_left = (container_width - this.player_width +
-            - this.options.offset_left);
+            -this.options.offset_left * this.options.distance);
+        this.player_max_top = (this.options.container_height - this.player_height +
+            -this.options.offset_top);
 
         this.options.container_width = container_width;
 
@@ -344,6 +354,7 @@
         this.scroll_container_offset_x = this.$scroll_container.scrollLeft();
         this.el_init_offset = this.$player.offset();
         this.player_width = this.$player.width();
+		this.player_height = this.$player.height();
 
         this.set_limits(this.options.container_width);
 
