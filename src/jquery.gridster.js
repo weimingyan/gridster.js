@@ -198,7 +198,7 @@
 		this.$style_tags = $([]);
 		
 		if (typeof (this.options.limit) === typeof (true)) {
-		    console.log("limit: bool is deprecated, use limit: { width: boolean, height: boolean} instead");
+		    console.log('limit: bool is deprecated, consider using limit: { width: boolean, height: boolean} instead');
 		    this.options.limit = { width: this.options.limit, height: this.options.limit };
 		}
 		
