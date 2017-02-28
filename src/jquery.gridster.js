@@ -196,7 +196,12 @@
 
 		this.generated_stylesheets = [];
 		this.$style_tags = $([]);
-
+		
+		if (typeof (this.options.limit) === typeof (true)) {
+		    console.log('limit: bool is deprecated, consider using limit: { width: boolean, height: boolean} instead');
+		    this.options.limit = { width: this.options.limit, height: this.options.limit };
+		}
+		
 		this.options.auto_init && this.init();
 	}
 
@@ -1360,7 +1365,7 @@
 			container_width: this.container_width,
 			move_element: false,
 			resize: true,
-			limit: { width: this.options.max_cols !== Infinity || this.limit.width, height: this.options.max_rows !== Infinity || this.limit.width },
+			limit: { width: this.options.max_cols !== Infinity || this.limit.width, height: this.options.max_rows !== Infinity || this.limit.height },
 			scroll_container: this.options.scroll_container,
 			start: $.proxy(this.on_start_resize, this),
 			stop: $.proxy(function (event, ui) {
