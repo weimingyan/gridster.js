@@ -992,7 +992,8 @@
 					handle_class: 'gs-resize-handle',
 					max_size: [Infinity, Infinity],
 					min_size: [1, 1]
-				}
+				},
+				ignore_self_occupied: false
 			};
 
 	/**
@@ -3340,6 +3341,9 @@
 		}
 
 		if (this.gridmap[col][row]) {
+			if(this.options.ignore_self_occupied) {		
+				return this.$player.data() !== $(this.gridmap[col][row]).data();		
+			}
 			return true;
 		}
 		return false;
