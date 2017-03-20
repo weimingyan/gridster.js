@@ -56,7 +56,7 @@ module.exports = function(grunt) {
 					banner: '<%= meta.minibanner %>'
 				},
 				files: {
-					'dist/jquery.<%= pkg.name %>.min.css': ['dist/jquery.<%= pkg.name %>.css']
+					'dist/jquery.<%= pkg.name %>.min.css': ['dist/jquery.gridster.css']
 				}
 			}
 		},
