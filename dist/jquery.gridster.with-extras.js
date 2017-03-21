@@ -1,4 +1,4 @@
-/*! gridster.js - v0.7.0 - 2017-03-20
+/*! gridster.js - v0.7.0 - 2017-03-21
 * https://dsmorse.github.io/gridster.js/
 * Copyright (c) 2017 ducksboard; Licensed MIT */
 
@@ -661,7 +661,7 @@
     fn.set_limits = function(container_width) {
         container_width || (container_width = this.$container.width());
         this.player_max_left = (container_width - this.player_width +
-            -this.options.offset_left * this.options.distance);
+            -this.options.offset_left);
         this.player_max_top = (this.options.container_height - this.player_height +
             -this.options.offset_top);
 
