@@ -1,4 +1,4 @@
-/*! gridster.js - v0.7.0 - 2017-03-21
+/*! gridster.js - v0.7.0 - 2017-03-27
 * https://dsmorse.github.io/gridster.js/
 * Copyright (c) 2017 ducksboard; Licensed MIT */
 
@@ -5064,6 +5064,34 @@
 		if (this.drag_api) {
 			this.drag_api.set_limits((this.cols * this.min_widget_width) + ((this.cols + 1) * this.options.widget_margins[0]));
 		}
+	};
+	
+	fn.set_new_num_rows = function (rows) {
+	    var max_rows = this.options.max_rows;
+
+	    var actual_rows = this.$widgets.map(function () {
+	        return $(this).attr('data-row');
+	    }).get();
+
+	    actual_rows.length || (actual_rows = [0]);
+
+	    var min_rows = Math.max.apply(Math, actual_rows);
+
+	    this.rows = Math.max(min_rows, rows, this.options.min_rows);
+
+	    if (max_rows !== Infinity && (max_rows < min_rows || max_rows < this.rows)) {
+	        max_rows = this.rows;
+	    }
+	    this.min_rows = min_rows;
+	    this.max_rows = max_rows;
+	    this.options.max_rows = max_rows;
+	    var height = (this.rows * this.min_widget_height) + ((this.rows + 1) * this.options.widget_margins[1]);
+
+	    if (this.drag_api) {
+	        this.drag_api.options.container_height = height;
+	    }
+	    this.container_height = height;
+	    this.generate_faux_grid(this.rows, this.cols);
 	};
 
 
