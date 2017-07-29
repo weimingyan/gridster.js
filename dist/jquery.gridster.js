@@ -1,6 +1,6 @@
-/*! gridster.js - v0.7.0 - 2017-03-27
+/*! gridster.js - v0.7.0 - 2017-07-28
 * https://dsmorse.github.io/gridster.js/
-* Copyright (c) 2017 ducksboard; Licensed MIT */
+* Copyright (c) 2017 weiming; Licensed MIT */
 
 ;(function(root, factory) {
 	'use strict';
@@ -2275,7 +2275,7 @@
 			container_width: this.container_width,
 			move_element: false,
 			resize: true,
-			limit: { width: this.options.max_cols !== Infinity || this.limit.width, height: this.options.max_rows !== Infinity || this.limit.height },
+			limit: { width: this.options.max_cols !== Infinity || this.options.limit.width, height: this.options.max_rows !== Infinity || this.options.limit.height },
 			scroll_container: this.options.scroll_container,
 			start: $.proxy(this.on_start_resize, this),
 			stop: $.proxy(function (event, ui) {
