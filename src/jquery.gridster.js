@@ -1292,7 +1292,16 @@
 	 * @return {Gridster} Returns the instance of the Gridster Class.
 	 */
 	fn.remove_from_gridmap = function (grid_data) {
-		return this.update_widget_position(grid_data, false);
+        this.for_each_cell_occupied(grid_data, function (col, row) {
+            if (!this.gridmap[col]) {
+                return this;
+            }
+            if(this.gridmap[col][row] && this.gridmap[col][row][0] === grid_data.el[0]){
+                this.gridmap[col][row] = false;
+            }
+
+        });
+        return this;
 	};
 
 
@@ -1558,7 +1567,7 @@
 	    //If widget has new position, clean previous grid
         var grid = this.placeholder_grid_data.el.coords().grid;
         if (grid.col !== this.placeholder_grid_data.col || grid.row !== this.placeholder_grid_data.row) {
-            this.update_widget_position(grid, false);
+            this.remove_from_gridmap(grid);
 
             // move the cells down if there is an overlap and we are in static mode
             if (this.options.collision.wait_for_mouseup) {
@@ -3848,7 +3857,7 @@
 		for (var x = 1; x <= opts.cols; x++) {
 			var colWidth = ((x * opts.widget_base_dimensions[0]) + ((x - 1) * opts.widget_margins[0]));
 			styles += (opts.namespace + ' [data-sizex="' + x + '"] { width:' +
-			(full_width ? (this.$wrapper.width() - this.options.widget_margins[0] * 2) : colWidth > this.$wrapper.width() ? this.$wrapper.width() : colWidth ) + 'px; }\n');
+            (full_width ? (this.$wrapper.width() - this.options.widget_margins[0] * 2) : colWidth ) + 'px; }\n');
 
 		}
 
