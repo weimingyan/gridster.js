@@ -84,7 +84,8 @@
 					max_size: [Infinity, Infinity],
 					min_size: [1, 1]
 				},
-				ignore_self_occupied: false
+				ignore_self_occupied: false,
+				magnetize_widgets_vertically: false
 			};
 
 	/**
@@ -169,6 +170,8 @@
 	 *                    during the resizing.
 	 *                @param {Function} [options.resize.stop] Function executed
 	 *                    when resizing stops.
+	 * 		@param {Boolean} [options.magnetize_widgets_vertically] Determines whether widgets below the dragged widget
+	 * 																will shift up when dragging
 	 *
 	 * @constructor
 	 */
@@ -1894,7 +1897,8 @@
 
 		for (i = 0; i < last_n_rows; i++) {
 			if ($.inArray(this.last_rows[i], rows) === -1) {
-				(end_callback || $.noop).call(this, this.last_rows[i]);
+				(end_callback || $.noop).call(this, this.last_rows[this.last_rows.length - 1]);
+				break;
 			}
 		}
 
@@ -2871,11 +2875,10 @@
 	fn.on_stop_overlapping_column = function (col) {
 		//this.set_player(col, false);
 		var self = this;
-		if (this.options.shift_larger_widgets_down) {
-			this.for_each_widget_below(col, this.cells_occupied_by_player.rows[0],
-					function (tcol, trow) {
-						self.move_widget_up(this, self.player_grid_data.size_y);
-					});
+		if (this.options.magnetize_widgets_vertically) {
+			this.for_each_widget_below(col, this.cells_occupied_by_player.rows[0], function (tcol, trow) {
+                self.move_widget_up(this, self.player_grid_data.size_y);
+            });
 		}
 	};
 
@@ -2891,7 +2894,7 @@
 		//this.set_player(false, row);
 		var self = this;
 		var cols = this.cells_occupied_by_player.cols;
-		if (this.options.shift_larger_widgets_down) {
+		if (this.options.magnetize_widgets_vertically) {
 			/*jshint -W083 */
 			for (var c = 0, cl = cols.length; c < cl; c++) {
 				this.for_each_widget_below(cols[c], row, function (tcol, trow) {
