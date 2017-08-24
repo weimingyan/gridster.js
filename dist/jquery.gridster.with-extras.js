@@ -1,4 +1,4 @@
-/*! gridster.js - v0.7.0 - 2017-08-23
+/*! gridster.js - v0.7.0 - 2017-08-24
 * https://dsmorse.github.io/gridster.js/
 * Copyright (c) 2017 ducksboard; Licensed MIT */
 
@@ -1488,7 +1488,7 @@
 		}
 
 		//ensure the grid has the correct number of cols
-		if (!this.is_valid_col(wgd.col, size_y)) {
+		if (!this.is_valid_col(wgd.col, size_x)) {
 			this.add_faux_cols(Math.max(this.calculate_highest_row(wgd.col, size_x) - this.cols, 0));
 		}
 
@@ -3296,10 +3296,6 @@
 	 * @Return {Boolean} true if the desire column exists in the grid.
 	 */
 	fn.is_valid_col = function (col, size_x) {
-		//if the grid is set to autogrow all cols are valid
-		if (this.options.max_cols === Infinity) {
-			return true;
-		}
 		return this.cols >= this.calculate_highest_col(col, size_x) ;
 	};
 
