@@ -1,4 +1,4 @@
-/*! gridster.js - v0.7.0 - 2017-08-23
+/*! gridster.js - v0.7.0 - 2017-08-30
 * https://dsmorse.github.io/gridster.js/
 * Copyright (c) 2017 ducksboard; Licensed MIT */
 
@@ -1488,7 +1488,7 @@
 		}
 
 		//ensure the grid has the correct number of cols
-		if (!this.is_valid_col(wgd.col, size_y)) {
+		if (!this.is_valid_col(wgd.col, size_x)) {
 			this.add_faux_cols(Math.max(this.calculate_highest_row(wgd.col, size_x) - this.cols, 0));
 		}
 
@@ -1855,9 +1855,12 @@
 			this.move_widget_down($w, diff);
 		}, this));
 
-		if (!this.is_resizing) {
-			this.set_dom_grid_height();
-		}
+		// When dragging question from the left panel, the following statement resizes the gridster container
+		// prematurely before the dragged question is added to the form.
+
+		// if (!this.is_resizing) {
+		// 	this.set_dom_grid_height();
+		// }
 
 		return this;
 	};
