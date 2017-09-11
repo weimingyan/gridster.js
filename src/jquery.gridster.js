@@ -2390,10 +2390,6 @@
 	 * @Return {Boolean} true if the desire column exists in the grid.
 	 */
 	fn.is_valid_col = function (col, size_x) {
-		//if the grid is set to autogrow all cols are valid
-		if (this.options.max_cols === Infinity) {
-			return true;
-		}
 		return this.cols >= this.calculate_highest_col(col, size_x) ;
 	};
 
