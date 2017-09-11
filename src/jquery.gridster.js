@@ -946,9 +946,12 @@
 			this.move_widget_down($w, diff);
 		}, this));
 
-		if (!this.is_resizing) {
-			this.set_dom_grid_height();
-		}
+		// When dragging question from the left panel, the following statement resizes the gridster container
+		// prematurely before the dragged question is added to the form.
+
+		// if (!this.is_resizing) {
+		// 	this.set_dom_grid_height();
+		// }
 
 		return this;
 	};
