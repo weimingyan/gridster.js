@@ -1,4 +1,4 @@
-/*! gridster.js - v0.7.0 - 2017-08-30
+/*! gridster.js - v0.7.0 - 2017-09-11
 * https://dsmorse.github.io/gridster.js/
 * Copyright (c) 2017 ducksboard; Licensed MIT */
 
@@ -1366,6 +1366,11 @@
 		var reqRows = parseInt(pos.row) + (parseInt(pos.size_y) - 1);
 		if (this.rows < reqRows) {
 			this.add_faux_rows(reqRows - this.rows);
+		}
+
+		var reqCols = parseInt(pos.col) + (parseInt(pos.size_x) - 1);
+		if (this.cols < reqCols) {
+			this.add_faux_cols(reqCols - this.cols);
 		}
 
 		if (max_size) {

@@ -459,6 +459,11 @@
 			this.add_faux_rows(reqRows - this.rows);
 		}
 
+		var reqCols = parseInt(pos.col) + (parseInt(pos.size_x) - 1);
+		if (this.cols < reqCols) {
+			this.add_faux_cols(reqCols - this.cols);
+		}
+
 		if (max_size) {
 			this.set_widget_max_size($w, max_size);
 		}
