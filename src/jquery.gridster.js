@@ -48,9 +48,9 @@
 				shift_widgets_up: true,
 				show_element: function($el, callback) {
 					if (callback) {
-						$el.fadeIn(callback);
+						$el.fadeIn(0, callback);
 					} else {
-						$el.fadeIn();
+						$el.fadeIn(0);
 					}
 				},
 				hide_element: function($el, callback) {
