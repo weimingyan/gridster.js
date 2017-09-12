@@ -2255,7 +2255,7 @@
 			container_height: (this.rows * this.min_widget_height) + ((this.rows + 1) * this.options.widget_margins[0]),
 			limit: { width: this.options.limit.width, height: this.options.limit.height },
 			start: function (event, ui) {
-				self.$widgets.filter('.player-revert')
+				$(self.widgets).filter('.player-revert')
 						.removeClass('player-revert');
 
 				self.$player = $(this);
@@ -2495,12 +2495,12 @@
                   // get number of cells to move
                   var destinyRow = this.placeholder_grid_data.row + this.placeholder_grid_data.size_y;
 
-              var currentOverlappedRow = parseInt(this.gridmap[tcol][trow][0].getAttribute('data-row'));
-              var cellsToMove = destinyRow - currentOverlappedRow;
-              var failed = !this.move_widget_down(this.is_widget(tcol, trow), cellsToMove);
-              if (failed) {
-                  this.set_placeholder(this.placeholder_grid_data.el.coords().grid.col, this.placeholder_grid_data.el.coords().grid.row);
-              }
+		              var currentOverlappedRow = parseInt(this.gridmap[tcol][trow][0].getAttribute('data-row'));
+		              var cellsToMove = destinyRow - currentOverlappedRow;
+		              var failed = !this.move_widget_down(this.is_widget(tcol, trow), cellsToMove);
+		              if (failed) {
+		                  this.set_placeholder(this.placeholder_grid_data.el.coords().grid.col, this.placeholder_grid_data.el.coords().grid.row);
+		              }
               }
           });
       }
@@ -4129,25 +4129,25 @@
 	 * @return {jQuery} A jQuery collection of HTMLElements.
 	 */
 	fn.widgets_below = function ($el) {
-		var $nexts = $([]);
+		var nexts = [];
 		var el_grid_data = $.isPlainObject($el) ? $el : $el.coords().grid;
 		if (el_grid_data === undefined) {
 			//there is no grid, so we can't calculate the widgets below
-			return $nexts;
+			return $(nexts);
 		}
 		var self = this;
 		var next_row = el_grid_data.row + el_grid_data.size_y - 1;
 
 		this.for_each_column_occupied(el_grid_data, function (col) {
 			self.for_each_widget_below(col, next_row, function (tcol, trow) {
-				if (!self.is_player(this) && $.inArray(this, $nexts) === -1) {
-					$nexts = $nexts.add(this);
+				if (!self.is_player(this) && $.inArray(this, nexts) === -1) {
+					nexts.push(this);
 					return true; // break
 				}
 			});
 		});
 
-		return Gridster.sort_by_row_asc($nexts);
+		return Gridster.sort_by_row_asc($(nexts));
 	};
 
 
