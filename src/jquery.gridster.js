@@ -4285,7 +4285,12 @@
     };
 
     fn.get_changed = function() {
-        return $(Object.values(this.changed));
+        var gr = this;
+        var widgets = Object.keys(this.changed).map(function(k) {
+          return gr.changed[k];
+        });
+
+        return $(widgets);
     };
 
     fn.add_to_changed = function($widget) {
